@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<head>
+    <title>Sample RDFa Content</title>
+</head>
+<body>
+    <div typeof="foaf:Person" about="#alice">
+        <span property="foaf:name">Alice</span>
+        <div rel="foaf:knows" resource="#bob">Knows Bob</div>
+    </div>
+    <div typeof="foaf:Person" about="#bob">
+        <span property="foaf:name">Bob</span>
+    </div>
+</body>
+</html>
