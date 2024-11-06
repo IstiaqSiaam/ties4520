@@ -1,0 +1,165 @@
+@prefix : <http://example.org/ontologies/hospital.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ontologies/hospital.owl> rdf:type owl:Ontology .
+
+### Classes ###
+
+:Person rdf:type owl:Class .
+
+:Patient rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Doctor rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Nurse rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:StaffMember rdf:type owl:Class ;
+    rdfs:subClassOf :Person ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty :worksIn ;
+        owl:allValuesFrom :Department
+    ] .
+
+:MedicalRecord rdf:type owl:Class .
+
+:Appointment rdf:type owl:Class .
+
+:Prescription rdf:type owl:Class .
+
+:Department rdf:type owl:Class .
+
+:Ward rdf:type owl:Class ;
+    rdfs:subClassOf :Department .
+
+:Treatment rdf:type owl:Class .
+
+:Diagnosis rdf:type owl:Class .
+
+:Surgery rdf:type owl:Class ;
+    rdfs:subClassOf :Treatment .
+
+:LabTest rdf:type owl:Class ;
+    rdfs:subClassOf :Treatment .
+
+:Hospital rdf:type owl:Class .
+
+:Specialty rdf:type owl:Class ;
+    owl:oneOf ( :Cardiology :Oncology :Pediatrics :Radiology ) .
+
+:Cardiology rdf:type owl:NamedIndividual .
+
+:Oncology rdf:type owl:NamedIndividual .
+
+:Pediatrics rdf:type owl:NamedIndividual .
+
+:Radiology rdf:type owl:NamedIndividual .
+
+:BloodType rdf:type owl:Class ;
+    owl:oneOf ( :A_Positive :A_Negative :B_Positive :B_Negative :AB_Positive :AB_Negative :O_Positive :O_Negative ) .
+
+:A_Positive rdf:type owl:NamedIndividual .
+
+:A_Negative rdf:type owl:NamedIndividual .
+
+:B_Positive rdf:type owl:NamedIndividual .
+
+:B_Negative rdf:type owl:NamedIndividual .
+
+:AB_Positive rdf:type owl:NamedIndividual .
+
+:AB_Negative rdf:type owl:NamedIndividual .
+
+:O_Positive rdf:type owl:NamedIndividual .
+
+:O_Negative rdf:type owl:NamedIndividual .
+
+:Surgeon rdf:type owl:Class ;
+    rdfs:subClassOf :Doctor .
+
+:Cardiologist rdf:type owl:Class ;
+    rdfs:subClassOf :Doctor .
+
+:MedicalProfessional rdf:type owl:Class ;
+    owl:unionOf ( :Doctor :Nurse ) .
+
+:CardiacSurgeon rdf:type owl:Class ;
+    owl:intersectionOf ( :Cardiologist :Surgeon ) .
+
+:NonSurgicalTreatment rdf:type owl:Class ;
+    owl:complementOf :Surgery ;
+    rdfs:subClassOf :Treatment .
+
+:UniquePatient rdf:type owl:Class ;
+    rdfs:subClassOf :Patient , [
+        rdf:type owl:Restriction ;
+        owl:onProperty :hasMedicalRecordNumber ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+### Object Properties ###
+
+:treats rdf:type owl:ObjectProperty , owl:InverseFunctionalProperty ;
+    rdfs:domain :Doctor ;
+    rdfs:range :Patient ;
+    owl:inverseOf :isTreatedBy .
+
+:isTreatedBy rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Doctor .
+
+:worksIn rdf:type owl:ObjectProperty ;
+    rdfs:domain :StaffMember ;
+    rdfs:range :Department .
+
+:hasAppointment rdf:type owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Appointment .
+
+:hasMedicalRecord rdf:type owl:ObjectProperty , owl:FunctionalProperty , owl:InverseFunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :MedicalRecord .
+
+:primaryPhysician rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Doctor .
+
+:hasDiagnosis rdf:type owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Diagnosis .
+
+### Datatype Properties ###
+
+:hasName rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasAge rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:integer .
+
+:hasGender rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasAddress rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasDateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:date .
+
+:hasBloodPressure rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
+
+:hasMedicalRecordNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
