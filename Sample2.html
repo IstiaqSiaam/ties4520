@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:schema="http://schema.org/"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+      xmlns:ex="http://example.org/">
+<head>
+    <title>Complex RDFa Sample</title>
+</head>
+<body>
+
+<div typeof="foaf:Person" about="#alice">
+    <h2 property="foaf:name">Alice</h2>
+    <p>
+        <span property="foaf:age" datatype="xsd:integer">30</span> years old, works as a
+        <span property="schema:jobTitle">Software Engineer</span> at
+        <span property="schema:worksFor" typeof="schema:Organization">
+            <span property="schema:name">Tech Corp</span>
+        </span>.
+    </p>
+    <p>
+        Lives at:
+        <span property="vcard:hasAddress" typeof="vcard:Address">
+            <span property="vcard:street-address">123 Main St</span>,
+            <span property="vcard:locality">Anytown</span>,
+            <span property="vcard:country-name">Wonderland</span>
+        </span>.
+    </p>
+    <p>
+        Contact:
+        <span property="vcard:email">alice@example.org</span>
+    </p>
+    <p>
+        Knows:
+        <a rel="foaf:knows" href="#bob">Bob</a>,
+        <a rel="foaf:knows" href="#charlie">Charlie</a>
+    </p>
+</div>
+
+<div typeof="foaf:Person" about="#bob">
+    <h2 property="foaf:name">Bob</h2>
+    <p>
+        <span property="foaf:age" datatype="xsd:integer">35</span> years old, works as a
+        <span property="schema:jobTitle">Data Scientist</span> at
+        <span property="schema:worksFor" typeof="schema:Organization">
+            <span property="schema:name">Data Corp</span>
+        </span>.
+    </p>
+    <p>
+        Lives at:
+        <span property="vcard:hasAddress" typeof="vcard:Address">
+            <span property="vcard:street-address">456 Elm St</span>,
+            <span property="vcard:locality">Anytown</span>,
+            <span property="vcard:country-name">Wonderland</span>
+        </span>.
+    </p>
+    <p>
+        Contact:
+        <span property="vcard:email">bob@example.org</span>
+    </p>
+    <p>
+        Knows:
+        <a rel="foaf:knows" href="#alice">Alice</a>
+    </p>
+</div>
+
+<div typeof="foaf:Person" about="#charlie">
+    <h2 property="foaf:name">Charlie</h2>
+    <p>
+        <span property="foaf:age" datatype="xsd:integer">28</span> years old, works as a
+        <span property="schema:jobTitle">Designer</span> at
+        <span property="schema:worksFor" typeof="schema:Organization">
+            <span property="schema:name">Creative Inc</span>
+        </span>.
+    </p>
+    <p>
+        Lives at:
+        <span property="vcard:hasAddress" typeof="vcard:Address">
+            <span property="vcard:street-address">789 Oak St</span>,
+            <span property="vcard:locality">Othertown</span>,
+            <span property="vcard:country-name">Wonderland</span>
+        </span>.
+    </p>
+    <p>
+        Contact:
+        <span property="vcard:email">charlie@example.org</span>
+    </p>
+    <p>
+        Knows:
+        <a rel="foaf:knows" href="#alice">Alice</a>
+    </p>
+</div>
+
+<div typeof="schema:Event" about="#conference">
+    <h2 property="schema:name">Tech Conference 2021</h2>
+    <p>
+        <span property="schema:startDate" datatype="xsd:date">2021-09-15</span> -
+        <span property="schema:endDate" datatype="xsd:date">2021-09-17</span>
+    </p>
+    <p>
+        Location:
+        <span property="schema:location" typeof="schema:Place">
+            <span property="schema:name">Convention Center</span>,
+            <span property="schema:address" typeof="vcard:Address">
+                <span property="vcard:street-address">100 Conference Blvd</span>,
+                <span property="vcard:locality">Big City</span>,
+                <span property="vcard:country-name">Wonderland</span>
+            </span>
+        </span>
+    </p>
+    <p>
+        Attendees:
+        <a rel="schema:attendee" href="#alice">Alice</a>,
+        <a rel="schema:attendee" href="#bob">Bob</a>
+    </p>
+</div>
+
+</body>
+</html>
