@@ -1,0 +1,327 @@
+@prefix : <http://example.org/ontologies/hospital.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ontologies/hospital.owl> rdf:type owl:Ontology .
+
+### Classes ###
+
+:Person rdf:type owl:Class .
+
+:Patient rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Doctor rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Nurse rdf:type owl:Class ;
+    rdfs:subClassOf :Person .
+
+:StaffMember rdf:type owl:Class ;
+    rdfs:subClassOf :Person ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty :worksIn ;
+        owl:allValuesFrom :Department
+    ] .
+
+:MedicalRecord rdf:type owl:Class .
+
+:Appointment rdf:type owl:Class .
+
+:Prescription rdf:type owl:Class .
+
+:Department rdf:type owl:Class .
+
+:Ward rdf:type owl:Class ;
+    rdfs:subClassOf :Department .
+
+:Treatment rdf:type owl:Class .
+
+:Diagnosis rdf:type owl:Class .
+
+:Surgery rdf:type owl:Class ;
+    rdfs:subClassOf :Treatment .
+
+:LabTest rdf:type owl:Class ;
+    rdfs:subClassOf :Treatment .
+
+:Hospital rdf:type owl:Class .
+
+:Specialty rdf:type owl:Class ;
+    owl:oneOf ( :Cardiology :Oncology :Pediatrics :Radiology ) .
+
+:Cardiology rdf:type owl:NamedIndividual .
+
+:Oncology rdf:type owl:NamedIndividual .
+
+:Pediatrics rdf:type owl:NamedIndividual .
+
+:Radiology rdf:type owl:NamedIndividual .
+
+:BloodType rdf:type owl:Class ;
+    owl:oneOf ( :A_Positive :A_Negative :B_Positive :B_Negative :AB_Positive :AB_Negative :O_Positive :O_Negative ) .
+
+:A_Positive rdf:type owl:NamedIndividual .
+
+:A_Negative rdf:type owl:NamedIndividual .
+
+:B_Positive rdf:type owl:NamedIndividual .
+
+:B_Negative rdf:type owl:NamedIndividual .
+
+:AB_Positive rdf:type owl:NamedIndividual .
+
+:AB_Negative rdf:type owl:NamedIndividual .
+
+:O_Positive rdf:type owl:NamedIndividual .
+
+:O_Negative rdf:type owl:NamedIndividual .
+
+:Surgeon rdf:type owl:Class ;
+    rdfs:subClassOf :Doctor .
+
+:Cardiologist rdf:type owl:Class ;
+    rdfs:subClassOf :Doctor .
+
+:MedicalProfessional rdf:type owl:Class ;
+    owl:unionOf ( :Doctor :Nurse ) .
+
+:CardiacSurgeon rdf:type owl:Class ;
+    owl:intersectionOf ( :Cardiologist :Surgeon ) .
+
+:NonSurgicalTreatment rdf:type owl:Class ;
+    owl:complementOf :Surgery ;
+    rdfs:subClassOf :Treatment .
+
+:UniquePatient rdf:type owl:Class ;
+    rdfs:subClassOf :Patient , [
+        rdf:type owl:Restriction ;
+        owl:onProperty :hasMedicalRecordNumber ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+### Object Properties ###
+
+:treats rdf:type owl:ObjectProperty , owl:InverseFunctionalProperty ;
+    rdfs:domain :Doctor ;
+    rdfs:range :Patient ;
+    owl:inverseOf :isTreatedBy .
+
+:isTreatedBy rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Doctor .
+
+:worksIn rdf:type owl:ObjectProperty ;
+    rdfs:domain :StaffMember ;
+    rdfs:range :Department .
+
+:hasAppointment rdf:type owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Appointment .
+
+:hasMedicalRecord rdf:type owl:ObjectProperty , owl:FunctionalProperty , owl:InverseFunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :MedicalRecord .
+
+:primaryPhysician rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Doctor .
+
+:hasDiagnosis rdf:type owl:ObjectProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range :Diagnosis .
+
+### Datatype Properties ###
+
+:hasName rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasAge rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:integer .
+
+:hasGender rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasAddress rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:hasDateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:date .
+
+:hasBloodPressure rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
+
+:hasMedicalRecordNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Patient ;
+    rdfs:range xsd:string .
+
+### Individuals ###
+
+#### Patients ####
+
+:Patient_Jane_Doe rdf:type :UniquePatient ;
+    :hasName "Jane Doe" ;
+    :hasAge 28 ;
+    :hasGender "Female" ;
+    :hasAddress "123 Main St, Anytown" ;
+    :hasDateOfBirth "1995-04-12"^^xsd:date ;
+    :hasBloodPressure "120/80" ;
+    :hasMedicalRecordNumber "MRN12345" ;
+    :hasMedicalRecord :MedicalRecord_Jane_Doe ;
+    :hasDiagnosis :Diagnosis_CommonCold ;
+    :isTreatedBy :Doctor_John_Smith .
+
+:Patient_John_Roe rdf:type :UniquePatient ;
+    :hasName "John Roe" ;
+    :hasAge 40 ;
+    :hasGender "Male" ;
+    :hasAddress "456 Oak Ave, Sometown" ;
+    :hasDateOfBirth "1983-07-23"^^xsd:date ;
+    :hasBloodPressure "130/85" ;
+    :hasMedicalRecordNumber "MRN67890" ;
+    :hasMedicalRecord :MedicalRecord_John_Roe ;
+    :hasDiagnosis :Diagnosis_Hypertension ;
+    :isTreatedBy :Doctor_Alice_Wong .
+
+#### Doctors ####
+
+:Doctor_John_Smith rdf:type :Doctor , :Cardiologist ;
+    :hasName "Dr. John Smith" ;
+    :hasAge 50 ;
+    :hasGender "Male" ;
+    :hasAddress "789 Elm St, Anytown" ;
+    :hasDateOfBirth "1973-01-15"^^xsd:date ;
+    :worksIn :Department_Cardiology ;
+    :treats :Patient_Jane_Doe .
+
+:Doctor_Alice_Wong rdf:type :Doctor , :Surgeon ;
+    :hasName "Dr. Alice Wong" ;
+    :hasAge 45 ;
+    :hasGender "Female" ;
+    :hasAddress "321 Pine Rd, Sometown" ;
+    :hasDateOfBirth "1978-05-30"^^xsd:date ;
+    :worksIn :Department_Surgery ;
+    :treats :Patient_John_Roe .
+
+#### Nurses ####
+
+:Nurse_Susan_Lee rdf:type :Nurse ;
+    :hasName "Susan Lee" ;
+    :hasAge 35 ;
+    :hasGender "Female" ;
+    :hasAddress "654 Maple Dr, Othertown" ;
+    :hasDateOfBirth "1988-11-08"^^xsd:date ;
+    :worksIn :Department_Cardiology .
+
+#### Departments ####
+
+:Department_Cardiology rdf:type :Department ;
+    :hasName "Cardiology Department" .
+
+:Department_Surgery rdf:type :Department ;
+    :hasName "Surgery Department" .
+
+#### Medical Records ####
+
+:MedicalRecord_Jane_Doe rdf:type :MedicalRecord ;
+    :hasMedicalRecordNumber "MRN12345" ;
+    :isMedicalRecordOf :Patient_Jane_Doe .
+
+:MedicalRecord_John_Roe rdf:type :MedicalRecord ;
+    :hasMedicalRecordNumber "MRN67890" ;
+    :isMedicalRecordOf :Patient_John_Roe .
+
+#### Diagnoses ####
+
+:Diagnosis_CommonCold rdf:type :Diagnosis ;
+    :hasName "Common Cold" .
+
+:Diagnosis_Hypertension rdf:type :Diagnosis ;
+    :hasName "Hypertension" .
+
+#### Appointments ####
+
+:Appointment1 rdf:type :Appointment ;
+    :hasDate "2023-10-15"^^xsd:date ;
+    :hasTime "09:00:00"^^xsd:time ;
+    :withDoctor :Doctor_John_Smith ;
+    :forPatient :Patient_Jane_Doe .
+
+:Appointment2 rdf:type :Appointment ;
+    :hasDate "2023-10-16"^^xsd:date ;
+    :hasTime "10:30:00"^^xsd:time ;
+    :withDoctor :Doctor_Alice_Wong ;
+    :forPatient :Patient_John_Roe .
+
+#### Hospital ####
+
+:City_Hospital rdf:type :Hospital ;
+    :hasName "City Hospital" ;
+    :hasDepartment :Department_Cardiology , :Department_Surgery .
+
+#### Treatments ####
+
+:Treatment_Medication rdf:type :NonSurgicalTreatment ;
+    :hasName "Medication Therapy" ;
+    :providedTo :Patient_John_Roe .
+
+:Treatment_Surgery rdf:type :Surgery ;
+    :hasName "Appendectomy" ;
+    :providedTo :Patient_John_Roe .
+
+#### Wards ####
+
+:Ward_A rdf:type :Ward ;
+    :hasName "Ward A" ;
+    :partOf :Department_Surgery .
+
+#### Lab Tests ####
+
+:LabTest_Blood rdf:type :LabTest ;
+    :hasName "Complete Blood Count" ;
+    :conductedFor :Patient_Jane_Doe .
+
+#### Prescriptions ####
+
+:Prescription1 rdf:type :Prescription ;
+    :prescribedBy :Doctor_John_Smith ;
+    :givenTo :Patient_Jane_Doe ;
+    :medication "Antibiotics" .
+
+#### Additional Individuals ####
+
+:Cardiologist_Specialty rdf:type :Specialty ;
+    rdfs:label "Cardiology" .
+
+:Surgeon_Specialty rdf:type :Specialty ;
+    rdfs:label "Surgery" .
+
+#### Staff Members ####
+
+:Staff_Member_Tom_Brown rdf:type :StaffMember ;
+    :hasName "Tom Brown" ;
+    :hasAge 28 ;
+    :hasGender "Male" ;
+    :hasAddress "987 Birch St, Othertown" ;
+    :hasDateOfBirth "1995-02-20"^^xsd:date ;
+    :worksIn :Department_Surgery .
+
+### Object Properties for Individuals ###
+
+:Patient_Jane_Doe :hasAppointment :Appointment1 .
+
+:Patient_John_Roe :hasAppointment :Appointment2 .
+
+### Datatype Properties for Individuals ###
+
+# Already included in the individual definitions above.
+
